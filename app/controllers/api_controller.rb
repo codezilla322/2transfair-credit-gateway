@@ -119,12 +119,17 @@ class ApiController < ApplicationController
         result = { :code => 0, :msg => message }
       else
         discount_amount = value
-        shopify_session = ShopifyAPI::Session.new(
-          domain: shop.shopify_domain,
-          token: shop.shopify_token,
-          api_version: shop.api_version,
-        )
-        ShopifyAPI::Base.activate_session(shopify_session)
+        # shopify_session = ShopifyAPI::Session.new(
+        #   domain: shop.shopify_domain,
+        #   token: shop.shopify_token,
+        #   api_version: shop.api_version,
+        # )
+        # ShopifyAPI::Base.activate_session(shopify_session)
+        private_api_key = ENV['SHOPIFY_PRIVATE_API_KEY']
+        private_api_password = ENV['SHOPIFY_PRIVATE_API_PASSWORD']
+        shop_url = "https://#{private_api_key}:#{private_api_password}@#{shop_domain}"
+        ShopifyAPI::Base.site = shop_url
+        ShopifyAPI::Base.api_version = '2020-04'
         accesstokens = ShopifyAPI::StorefrontAccessToken.find(:all)
         if accesstokens.empty?
           accesstoken = ShopifyAPI::StorefrontAccessToken.create(title: 'discount-apply')
