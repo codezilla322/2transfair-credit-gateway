@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="https://unpkg.com/@shopify/polaris@4.19.0/styles.min.css"/>
+<style>
+  html {
+    height: auto;
+    min-height: auto;
+  }
+  .Polaris-Card {
+    margin: 0 auto;
+    max-width: 50rem;
+    margin-top: 3.2rem;
+  }
+  .Polaris-TextField {
+    margin-bottom: 2rem;
+  }
+</style>
+<div class="Polaris-Card">
+  <div class="Polaris-Card__Header">
+    <h2 class="Polaris-DisplayText Polaris-DisplayText--sizeMedium">REST API Settings</h2>
+  </div>
+  <div class="Polaris-Card__Section">
+    <%= form_with(url: "/setting", method: "post", local: true) do %>
+      <div class="Polaris-Labelled__LabelWrapper">
+        <div class="Polaris-Label">
+          <%= label_tag(:app_id_2transfair, "2Transfer App ID:", :class => "Polaris-Label__Text") %>
+        </div>
+      </div>
+      <div class="Polaris-TextField Polaris-TextField--hasValue">
+        <%= text_field_tag(:app_id_2transfair, @shop_setting_api_key, :class => "Polaris-TextField__Input") %>
+        <div class="Polaris-TextField__Backdrop"></div>
+      </div>
+      <%= submit_tag("Save", :class => "Polaris-Button Polaris-Button--primary") %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,128 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Contractor app modal</title>
+  </head>
+  <body>
+    <div id="contractor_modals_wrapper" style="display:none;">
+      <div class="modal-overlay">
+        <img src="https://316447a9.ngrok.io/assets/embed/loading.gif">
+      </div>
+      <div class="contractor-modal hidden" id="contractor_step1_modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Tienes un cupo de crédito preaprobado?</h4>
+            <span class="modal-dismiss">×</span>
+          </div>
+          <div class="modal-body">
+            <p>Hola,<br>Si tienes un cupo de crédito preaprobado con BizExample, puedes aplicarlo a esta compra.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-button modal-close">No, No tengo un cupo de crédito.</button>
+            <button type="button" class="modal-button" id="contractor_step1_next">Si. Deseo aplicar mi cupo de crédito  a esta compra.</button>
+          </div>
+        </div>
+      </div>
+      <div class="contractor-modal hidden" id="contractor_step2_modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Genera un código de pago</h4>
+            <span class="modal-dismiss">×</span>
+          </div>
+          <div class="modal-body">
+            <p>Ingresa con tu usuario y contraseña de la campaña de crédito online de BizExample.</p>
+            <div class="modal-input-wrapper">
+              <label for="contractor_email">Usuario (email)</label>
+              <input type="text" id="contractor_email" value="naty871012@hotmail.com"/>
+            </div>
+            <div class="modal-input-wrapper">
+              <label for="contractor_password">Contraseña</label>
+              <input type="password" id="contractor_password" value="123456"/>
+            </div>
+            <div class="modal-msg"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-button" id="contractor_step2_next">Obtener código de pago</button>
+          </div>
+        </div>
+      </div>
+      <div class="contractor-modal hidden" id="contractor_step3_modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Hemos enviado un SMS a tu celular</h4>
+            <span class="modal-dismiss">×</span>
+          </div>
+          <div class="modal-body">
+            <p>Hemos enviado un código de pago a tu número celular terminado en <span id="contractor_phone_number"></span></p>
+            <p>Con el cual autorizarás y firmarás las condiciones del crédito:</p>
+            <p>Valor del crédito: $<span id="contractor_total_value"></span></p>
+            <div class="modal-input-wrapper">
+              <p>Cuotas: <select id="contractor_terms"></select></p>
+            </div>
+            <div class="modal-input-wrapper">
+              <p class="flex-center">
+                <input type="checkbox" id="contractor_agree">
+                <a href="" id="contractor_policy_url">He leido y entendido las condiciones del crédito</a>
+              </p>
+            </div>
+            <div class="modal-input-wrapper">
+              <input type="password" id="contractor_payment_code" placeholder="INGRESA CÓDIGO"/>
+            </div>
+            <div class="modal-msg"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-button" id="contractor_step3_next">Obtener código de pago</button>
+          </div>
+        </div>
+      </div>
+      <div class="contractor-modal hidden" id="contractor_step4_modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Estás segura de que quieres aplicar este crédito?</h4>
+            <span class="modal-back">×</span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-button modal-back">Cancelar</button>
+            <button type="button" class="modal-button" id="contractor_step4_next">Si</button>
+          </div>
+        </div>
+      </div>
+      <div class="contractor-modal hidden" id="contractor_step5_modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Crédito aplicado satisfactoriamente</h4>
+            <span class="modal-dismiss">×</span>
+          </div>
+          <div class="modal-body">
+            <p id="contractor_success_msg"></p>
+            <p>$<span id="contractor_discount_amount"></span></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-button modal-close">Continuar</button>
+          </div>
+        </div>
+      </div>
+      <div class="contractor-modal hidden" id="contractor_msg_modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Operación no pudo ser aplicada</h4>
+            <span class="modal-back">×</span>
+          </div>
+          <div class="modal-body">
+            <p id="contractor_failed_msg"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-button modal-back">Continuar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <link rel="stylesheet" href="https://316447a9.ngrok.io/assets/embed/style.css"> -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js"></script>
+    <!-- <script src="https://316447a9.ngrok.io/assets/embed/script.js"></script> -->
+    <script src="assets/js/script.js"></script>
+  </body>
+</html>
