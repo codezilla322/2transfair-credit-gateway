@@ -139,7 +139,6 @@ class ApiController < ApplicationController
         # end
         # puts accesstoken.access_token
         token = SecureRandom.hex(12)
-        puts token
         pricerule = ShopifyAPI::PriceRule.new
         pricerule.title = token
         pricerule.target_type = "line_item"
