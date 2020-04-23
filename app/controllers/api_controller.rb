@@ -95,6 +95,7 @@ class ApiController < ApplicationController
     payment_code = params[:payment_code]
     value = params[:value]
     terms = params[:terms]
+    # checkout_token = params[:checkout_token]
 
     api_url = ENV['API_ENDPOINT_URL'] + '/users/validate_transaction_payment_token'
     api_header_key = ENV['API_HEADER_KEY']
@@ -130,13 +131,13 @@ class ApiController < ApplicationController
         shop_url = "https://#{private_api_key}:#{private_api_password}@#{shop_domain}"
         ShopifyAPI::Base.site = shop_url
         ShopifyAPI::Base.api_version = '2020-04'
-        accesstokens = ShopifyAPI::StorefrontAccessToken.find(:all)
-        if accesstokens.empty?
-          accesstoken = ShopifyAPI::StorefrontAccessToken.create(title: 'discount-apply')
-        else
-          accesstoken = accesstokens[0]
-        end
-        puts accesstoken.access_token
+        # accesstokens = ShopifyAPI::StorefrontAccessToken.find(:all)
+        # if accesstokens.empty?
+        #   accesstoken = ShopifyAPI::StorefrontAccessToken.create(title: 'discount-apply')
+        # else
+        #   accesstoken = accesstokens[0]
+        # end
+        # puts accesstoken.access_token
         token = SecureRandom.hex(12)
         puts token
         pricerule = ShopifyAPI::PriceRule.new
@@ -147,15 +148,20 @@ class ApiController < ApplicationController
         pricerule.value_type = "fixed_amount"
         pricerule.value = "-" + discount_amount
         pricerule.customer_selection = "all"
+        pricerule.once_per_customer = true
+        pricerule.usage_limit = 1
         pricerule.starts_at = Date.yesterday.strftime("%Y-%m-%dT00:00:00-05:00")
         pricerule.ends_at = Date.tomorrow.strftime("%Y-%m-%dT23:59:59-05:00")
         pricerule.save
         discountcode = ShopifyAPI::DiscountCode.new(price_rule_id: pricerule.id)
         discountcode.code = token
+        discountcode.usage_count = 1;
         discountcode.save
+        # checkouts = ShopifyAPI::Checkout.find(:all)
+        # checkout = checkouts.find { |record| record.token == checkout_token }
         result = {
           :code => 1,
-          :access_token => accesstoken.access_token,
+          # :access_token => accesstoken.access_token,
           :discount_code => token,
           :discount_amount => discount_amount,
           :msg => message
