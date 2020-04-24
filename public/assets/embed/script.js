@@ -113,10 +113,16 @@ twotransfair.server_url = 'https://779ddf51.ngrok.io/api';
       return;
     }
     if(Shopify.Checkout.step == 'shipping_method') {
-      if(!applied_discount_code || applied_discount_code != saved_discount_code)
+      if(!applied_discount_code || applied_discount_code != saved_discount_code) {
         $('#twotransfair_modals_wrapper').show();
-      else
+      } else {
+        $('form.edit_checkout .step__footer button[type=submit] span').html('Terminar');
+        $('form.edit_checkout').on('submit', function(e) {
+          e.preventDefault();
+          window.location.href = 'https://' + twotransfair.shop_domain;
+        });
         return;
+      }
       $.ajax({
         type: 'GET',
         url: 'http://' + twotransfair.shop_domain + '/cart.json',
@@ -199,11 +205,5 @@ twotransfair.server_url = 'https://779ddf51.ngrok.io/api';
     twotransfair.shop_domain = window.Shopify.Checkout.apiHost;
     twotransfair.checkout_token = window.Shopify.Checkout.token;
     checkDiscount();
-
-    $('form.edit_checkout').on('submit', function(e) {
-      if(Shopify.Checkout.step == 'shipping_method')
-        e.preventDefault();
-        window.location.href = 'https://' + twotransfair.shop_domain;
-    });
   });
 })(jQuery);

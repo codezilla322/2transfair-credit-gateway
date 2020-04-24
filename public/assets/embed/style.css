@@ -100,6 +100,9 @@
   padding: 5px;
   font-size: 12px;
   border: 1px solid black;
+  -webkit-appearance: listbox;
+  -moz-appearance: listbox;
+  appearance: listbox;
 }
 .modal-input-wrapper input[type=checkbox] {
   width: 18px;
