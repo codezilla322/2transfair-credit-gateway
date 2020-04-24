@@ -1,5 +1,5 @@
 window.twotransfair = window.twotransfair || {};
-twotransfair.server_url = 'https://b63357e3.ngrok.io/api';
+twotransfair.server_url = 'https://779ddf51.ngrok.io/api';
 (function($){
   $.fn.twotransfairModal = function(msg_modal = null) {
     var $this = this;
@@ -199,5 +199,11 @@ twotransfair.server_url = 'https://b63357e3.ngrok.io/api';
     twotransfair.shop_domain = window.Shopify.Checkout.apiHost;
     twotransfair.checkout_token = window.Shopify.Checkout.token;
     checkDiscount();
+
+    $('form.edit_checkout').on('submit', function(e) {
+      if(Shopify.Checkout.step == 'shipping_method')
+        e.preventDefault();
+        window.location.href = 'https://' + twotransfair.shop_domain;
+    });
   });
 })(jQuery);

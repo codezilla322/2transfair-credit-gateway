@@ -7,7 +7,7 @@
   <body>
     <div id="twotransfair_modals_wrapper" style="display:none;">
       <div class="modal-overlay">
-        <img src="https://620e9107.ngrok.io/assets/embed/loading.gif">
+        <img src="https://779ddf51.ngrok.io/assets/embed/loading.gif">
       </div>
       <div class="twotransfair-modal hidden-modal" id="twotransfair_step1_modal">
         <div class="modal-content">
@@ -63,7 +63,7 @@
             <div class="modal-input-wrapper">
               <p class="flex-center">
                 <input type="checkbox" id="twotransfair_agree">
-                <a href="" id="twotransfair_policy_url">He leido y entendido las condiciones del crédito</a>
+                <a href="" target="_blank" id="twotransfair_policy_url">He leido y entendido las condiciones del crédito</a>
               </p>
             </div>
             <div class="modal-input-wrapper">
@@ -72,7 +72,7 @@
             <div class="modal-msg"></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="modal-button" id="twotransfair_step3_next">Obtener código de pago</button>
+            <button type="button" class="modal-button" id="twotransfair_step3_next">Firmar y applicar el crédito</button>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@
         </div>
       </div>
     </div>
-    <link rel="stylesheet" href="https://b63357e3.ngrok.io/assets/embed/style.css">
+    <link rel="stylesheet" href="https://779ddf51.ngrok.io/assets/embed/style.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     {% comment %}<script src="https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js"></script>
     {%- assign checkout_id = checkout.id -%}
@@ -126,6 +126,6 @@
       window.twotransfair = window.twotransfair || {};
       twotransfair.checkout_id = '{{ checkout_id }}';
     </script>{% endcomment %}
-    <script src="https://b63357e3.ngrok.io/assets/embed/script.min.js"></script>
+    <script src="https://779ddf51.ngrok.io/assets/embed/script.min.js"></script>
   </body>
 </html>
