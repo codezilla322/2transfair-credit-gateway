@@ -1,5 +1,5 @@
 window.twotransfair = window.twotransfair || {};
-twotransfair.server_url = 'https://779ddf51.ngrok.io/api';
+twotransfair.server_url = 'https://3b209148.ngrok.io/api';
 (function($){
   $.fn.twotransfairModal = function(msg_modal = null) {
     var $this = this;
@@ -164,6 +164,7 @@ twotransfair.server_url = 'https://779ddf51.ngrok.io/api';
         data: {
           email: email,
           password: password,
+          cart_id: twotransfair.cart_token,
           shop_domain: twotransfair.shop_domain
         }
       }, step_3);

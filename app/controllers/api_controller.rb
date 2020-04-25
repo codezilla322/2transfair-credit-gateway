@@ -20,6 +20,7 @@ class ApiController < ApplicationController
 
     email = params[:email]
     password = params[:password]
+    cart_id = params[:cart_id]
     api_url = ENV['API_ENDPOINT_URL'] + '/users/login_ecommerce'
     api_header_key = ENV['API_HEADER_KEY'];
     headers = {}
@@ -47,7 +48,8 @@ class ApiController < ApplicationController
           puts response.parsed_response
 
           api_url = ENV['API_ENDPOINT_URL'] + '/users/get_terms'
-          response = HTTParty.post(api_url, :headers => headers)
+          query = { :cart_id => cart_id }
+          response = HTTParty.post(api_url, :headers => headers, :query => query)
           puts response.code
           if response.body.nil? || response.body.empty?
             result = { :code => 0, :msg => "Error de servidor interno." }
