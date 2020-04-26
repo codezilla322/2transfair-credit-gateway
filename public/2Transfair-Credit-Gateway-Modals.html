@@ -7,9 +7,9 @@
   <body>
     <div id="twotransfair_modals_wrapper" style="display:none;">
       <div class="modal-overlay">
-        <img src="https://3b209148.ngrok.io/assets/embed/loading.gif">
+        <img src="https://f47f767f.ngrok.io/assets/embed/loading.gif">
       </div>
-      <div class="twotransfair-modal hidden-modal" id="twotransfair_step1_modal">
+      <div class="twotransfair-modal modal-hidden" id="twotransfair_step1_modal">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Tienes un cupo de crédito preaprobado?</h4>
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="twotransfair-modal hidden-modal" id="twotransfair_step2_modal">
+      <div class="twotransfair-modal modal-hidden" id="twotransfair_step2_modal">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Genera un código de pago</h4>
@@ -40,6 +40,9 @@
               <label for="twotransfair_password">Contraseña</label>
               <input type="password" id="twotransfair_password"/>
             </div>
+            <div class="modal-input-wrapper">
+              <p><a href="https://blablabla.com" target="_blank">Olvidaste la contrasena? Click aquí para recuperarla</a></p>
+            </div>
             <div class="modal-msg"></div>
           </div>
           <div class="modal-footer">
@@ -47,7 +50,7 @@
           </div>
         </div>
       </div>
-      <div class="twotransfair-modal hidden-modal" id="twotransfair_step3_modal">
+      <div class="twotransfair-modal modal-hidden" id="twotransfair_step3_modal">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Hemos enviado un SMS a tu celular</h4>
@@ -61,9 +64,9 @@
               <p>Cuotas: <select id="twotransfair_terms"></select></p>
             </div>
             <div class="modal-input-wrapper">
-              <p class="flex-center">
-                <input type="checkbox" id="twotransfair_agree">
-                <a href="" target="_blank" id="twotransfair_policy_url">He leido y entendido las condiciones del crédito</a>
+              <p>
+                <a href="javascript:void(0);" id="twotransfair_terms_url">Click aquí para leer y aceptar los términos del credito</a>
+                <span class="modal-hidden" id="twotransfair_terms_accepted">Condiciones del crédito leídas y aceptadas</span>
               </p>
             </div>
             <div class="modal-input-wrapper">
@@ -72,11 +75,11 @@
             <div class="modal-msg"></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="modal-button" id="twotransfair_step3_next">Firmar y applicar el crédito</button>
+            <button type="button" class="modal-button" id="twotransfair_step3_next" disabled>Firmar y applicar el crédito</button>
           </div>
         </div>
       </div>
-      <div class="twotransfair-modal hidden-modal" id="twotransfair_step4_modal">
+      <div class="twotransfair-modal modal-hidden" id="twotransfair_step4_modal">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Estás segura de que quieres aplicar este crédito?</h4>
@@ -88,7 +91,7 @@
           </div>
         </div>
       </div>
-      <div class="twotransfair-modal hidden-modal" id="twotransfair_step5_modal">
+      <div class="twotransfair-modal modal-hidden" id="twotransfair_step5_modal">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Crédito aplicado satisfactoriamente</h4>
@@ -103,7 +106,7 @@
           </div>
         </div>
       </div>
-      <div class="twotransfair-modal hidden-modal" id="twotransfair_msg_modal">
+      <div class="twotransfair-modal modal-hidden" id="twotransfair_msg_modal">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Operación no pudo ser aplicada</h4>
@@ -111,14 +114,28 @@
           </div>
           <div class="modal-body">
             <p id="twotransfair_failed_msg"></p>
+            <p>
+              <a href="javascript:void(0);" class="modal-hidden" id="twotransfair_resend_code">Solicitar un nuevo código</a>
+              <span class="modal-hidden" id="twotransfair_code_sent">Código enviado</span>
+            </p>
           </div>
           <div class="modal-footer">
             <button type="button" class="modal-button modal-back">Continuar</button>
           </div>
         </div>
       </div>
+      <div class="twotransfair-modal modal-hidden" id="twotransfair_terms_modal">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div id="twotransfair_terms_content" class="tac"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-button modal-back">Aceptar</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <link rel="stylesheet" href="https://3b209148.ngrok.io/assets/embed/style.css">
+    <link rel="stylesheet" href="https://f47f767f.ngrok.io/assets/embed/style.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     {% comment %}<script src="https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js"></script>
     {%- assign checkout_id = checkout.id -%}
@@ -126,6 +143,6 @@
       window.twotransfair = window.twotransfair || {};
       twotransfair.checkout_id = '{{ checkout_id }}';
     </script>{% endcomment %}
-    <script src="https://3b209148.ngrok.io/assets/embed/script.min.js"></script>
+    <script src="https://f47f767f.ngrok.io/assets/embed/script.min.js"></script>
   </body>
 </html>

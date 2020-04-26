@@ -1,5 +1,5 @@
 window.twotransfair = window.twotransfair || {};
-twotransfair.server_url = 'https://3b209148.ngrok.io/api';
+twotransfair.server_url = 'https://f47f767f.ngrok.io/api';
 (function($){
   $.fn.twotransfairModal = function(msg_modal = null) {
     var $this = this;
@@ -12,8 +12,10 @@ twotransfair.server_url = 'https://3b209148.ngrok.io/api';
       $this.hideModal();
       if(twotransfair.step == 1)
         twotransfair.ajax_step_1.showModal();
-      else if(twotransfair.step == 2)
+      else if(twotransfair.step == 2) {
         twotransfair.ajax_step_2.showModal();
+        $('#twotransfair_code_sent').addClass('modal-hidden');
+      }
     });
     this.showModal = function() {
       $(this).css('display', 'flex');
@@ -44,11 +46,12 @@ twotransfair.server_url = 'https://3b209148.ngrok.io/api';
         success: function(result) {
           if(result.code == 1) {
             if(twotransfair.step == 1) {
+              twotransfair.auth_token = result.auth_token;
               $('#twotransfair_phone_number').html(result.phone_number);
               twotransfair.total_value = result.total_value;
               var total_value = parseFloat(result.total_value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
               $('#twotransfair_total_value').html(total_value);
-              $('#twotransfair_policy_url').attr('href', result.url);
+              twotransfair.terms_url = result.url;
               result.terms.forEach(term => {
                 $('#twotransfair_terms').append($('<option></option>').attr('value', term.id).text(term.name)); 
               });
@@ -73,6 +76,8 @@ twotransfair.server_url = 'https://3b209148.ngrok.io/api';
             step_next.showModal();
           } else {
             $this.showMsgModal(result.msg);
+            if(twotransfair.step == 2)
+              $('#twotransfair_resend_code').removeClass('modal-hidden');
           }
         },
         error: function() {
@@ -135,6 +140,7 @@ twotransfair.server_url = 'https://3b209148.ngrok.io/api';
   }
   $(document).ready(function() {
     var msg_modal = $('#twotransfair_msg_modal').twotransfairModal();
+
     var step_1 = $('#twotransfair_step1_modal').twotransfairModal(msg_modal);
     var step_2 = $('#twotransfair_step2_modal').twotransfairModal(msg_modal);
     twotransfair.ajax_step_1 = step_2;
@@ -170,10 +176,6 @@ twotransfair.server_url = 'https://3b209148.ngrok.io/api';
       }, step_3);
     });
     $('#twotransfair_step3_next').click(function() {
-      if(!($('#twotransfair_agree').prop('checked'))) {
-        step_3.showMsg('Acepte los términos de crédito para continuar');
-        return;
-      }
       var payment_code = $('#twotransfair_payment_code').val();
       if(!isValidCode(payment_code) || payment_code.length != 6) {
         step_3.showMsg('Código inválido');
@@ -202,6 +204,58 @@ twotransfair.server_url = 'https://3b209148.ngrok.io/api';
     });
     $('#twotransfair_step5_finish').click(function() {
       applyDiscount(twotransfair.discount_code);
+    });
+    $('#twotransfair_terms').change(function() {
+      $('#twotransfair_step3_next').attr('disabled', true);
+      $('#twotransfair_terms_url').removeClass('modal-hidden');
+      $('#twotransfair_terms_accepted').addClass('modal-hidden');
+    });
+    $('#twotransfair_terms_url').click(function() {
+      var value = twotransfair.total_value;
+      var terms = $('#twotransfair_terms').val();
+      $.ajax({
+        method: 'get',
+        crossDomain: true,
+        // url: twotransfair.terms_url + '?cuota=' + terms + '&value=' + value,
+        url: 'https://localhost/test.php' + '?cuota=' + terms + '&value=' + value,
+        success: function(result) {
+          $('#twotransfair_terms_content').html(result);
+          $('#twotransfair_terms_modal').removeClass('modal-hidden');
+          step_3.hideModal();
+          $('#twotransfair_terms_url').addClass('modal-hidden');
+          $('#twotransfair_terms_accepted').removeClass('modal-hidden');
+        }
+      });
+    });
+    $('#twotransfair_terms_modal .modal-back').click(function() {
+      $('#twotransfair_terms_modal').addClass('modal-hidden');
+      step_3.showModal();
+      $('#twotransfair_step3_next').removeAttr('disabled');
+    });
+    $('#twotransfair_resend_code').click(function() {
+      $('#twotransfair_resend_code').addClass('modal-hidden');
+      $.ajax({
+        method: 'post',
+        dataType: 'json',
+        crossDomain: true,
+        url: twotransfair.server_url + '/resend',
+        data: {
+          auth_token: twotransfair.auth_token,
+          shop_domain: twotransfair.shop_domain
+        },
+        success: function(result) {
+          if(result.code == 1) {
+            $('#twotransfair_code_sent').removeClass('modal-hidden');
+          } else {
+            $('#twotransfair_resend_code').removeClass('modal-hidden');
+            $('#twotransfair_failed_msg').html(result.msg);
+          }
+        },
+        error: function() {
+          $('#twotransfair_resend_code').removeClass('modal-hidden');
+          $('#twotransfair_failed_msg').html('Error de servidor interno');
+        }
+      });
     });
     twotransfair.shop_domain = window.Shopify.Checkout.apiHost;
     twotransfair.checkout_token = window.Shopify.Checkout.token;

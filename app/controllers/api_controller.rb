@@ -58,6 +58,7 @@ class ApiController < ApplicationController
             if response.code == 200
               result = {
                 :code => 1,
+                :auth_token => auth_token,
                 :phone_number => phone_number,
                 :total_value => response.parsed_response['total_value'],
                 :url => response.parsed_response['url'],
@@ -168,6 +169,34 @@ class ApiController < ApplicationController
           :msg => message
         }
       end
+    end
+    render :json => result
+  end
+  def resend
+    shop_domain = params[:shop_domain]
+    shop = Shop.find_by(shopify_domain: shop_domain)
+    if shop.nil?
+      result = {
+        :code => 0,
+        :msg => "El dominio de Shopify no existe."
+      }
+      render :json => result
+      return
+    end
+
+    auth_token = params[:auth_token]
+    api_url = ENV['API_ENDPOINT_URL'] + '/users/generate_send_payment_token'
+    api_header_key = ENV['API_HEADER_KEY'];
+    headers = {}
+    headers[api_header_key] = shop[:app_id_2transfair]
+    headers[:Authorization] = auth_token
+    query = { :transaction_type => 'payment' }
+    response = HTTParty.post(api_url, :headers => headers, :query => query)
+    if response.body.nil? || response.body.empty?
+      result = { :code => 0, :msg => "Error de servidor interno." }
+    else
+      puts response.parsed_response
+      result = { :code => 1, :msg => response.parsed_response['message'] }
     end
     render :json => result
   end

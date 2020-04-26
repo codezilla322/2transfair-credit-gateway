@@ -79,7 +79,6 @@
   font-weight: bold;
 }
 .modal-body p a {
-  margin-left: 15px;
   color: black;
   text-decoration: underline;
   text-align: left;
@@ -100,9 +99,9 @@
   padding: 5px;
   font-size: 12px;
   border: 1px solid black;
-  -webkit-appearance: listbox;
-  -moz-appearance: listbox;
-  appearance: listbox;
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+  appearance: menulist;
 }
 .modal-input-wrapper input[type=checkbox] {
   width: 18px;
@@ -165,11 +164,9 @@
     margin-top: 15px ;
   }
 }
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.hidden-modal {
+.modal-hidden {
   display: none;
+}
+.tac {
+  text-align: center;
 }
