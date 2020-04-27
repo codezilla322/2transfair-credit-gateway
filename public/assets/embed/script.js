@@ -1,5 +1,5 @@
 window.twotransfair = window.twotransfair || {};
-twotransfair.server_url = 'https://f47f767f.ngrok.io/api';
+twotransfair.server_url = 'https://cac52aa5.ngrok.io/api';
 (function($){
   $.fn.twotransfairModal = function(msg_modal = null) {
     var $this = this;
@@ -140,7 +140,6 @@ twotransfair.server_url = 'https://f47f767f.ngrok.io/api';
   }
   $(document).ready(function() {
     var msg_modal = $('#twotransfair_msg_modal').twotransfairModal();
-
     var step_1 = $('#twotransfair_step1_modal').twotransfairModal(msg_modal);
     var step_2 = $('#twotransfair_step2_modal').twotransfairModal(msg_modal);
     twotransfair.ajax_step_1 = step_2;
@@ -216,8 +215,8 @@ twotransfair.server_url = 'https://f47f767f.ngrok.io/api';
       $.ajax({
         method: 'get',
         crossDomain: true,
-        // url: twotransfair.terms_url + '?cuota=' + terms + '&value=' + value,
-        url: 'https://localhost/test.php' + '?cuota=' + terms + '&value=' + value,
+        url: twotransfair.terms_url + '?cuota=' + terms + '&value=' + value,
+        //url: 'https://localhost/test.php' + '?cuota=' + terms + '&value=' + value,
         success: function(result) {
           $('#twotransfair_terms_content').html(result);
           $('#twotransfair_terms_modal').removeClass('modal-hidden');
