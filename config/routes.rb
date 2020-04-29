@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   post '/setting', to: 'home#setting'
   post '/api/login', to: 'api#login'
   post '/api/verify', to: 'api#verify'
+  post '/api/resend', to: 'api#resend'
 end
