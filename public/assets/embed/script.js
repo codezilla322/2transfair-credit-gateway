@@ -1,5 +1,5 @@
 window.twotransfair = window.twotransfair || {};
-twotransfair.server_url = 'https://cac52aa5.ngrok.io/api';
+twotransfair.server_url = 'https://33b46cd2.ngrok.io/api';
 (function($){
   $.fn.twotransfairModal = function(msg_modal = null) {
     var $this = this;
@@ -132,7 +132,7 @@ twotransfair.server_url = 'https://cac52aa5.ngrok.io/api';
         type: 'GET',
         url: 'http://' + twotransfair.shop_domain + '/cart.json',
         dataType: 'jsonp',
-        success: function(cart) { 
+        success: function(cart) {
           twotransfair.cart_token = cart.token;
         }
       });
@@ -169,7 +169,8 @@ twotransfair.server_url = 'https://cac52aa5.ngrok.io/api';
         data: {
           email: email,
           password: password,
-          cart_id: twotransfair.cart_token,
+          cart_token: twotransfair.cart_token,
+          checkout_token: twotransfair.checkout_token,
           shop_domain: twotransfair.shop_domain
         }
       }, step_3);

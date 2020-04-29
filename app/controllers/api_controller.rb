@@ -20,7 +20,8 @@ class ApiController < ApplicationController
 
     email = params[:email]
     password = params[:password]
-    cart_id = params[:cart_id]
+    cart_token = params[:cart_token]
+    checkout_token = params[:checkout_token]
     api_url = ENV['API_ENDPOINT_URL'] + '/users/login_ecommerce'
     api_header_key = ENV['API_HEADER_KEY'];
     headers = {}
@@ -48,7 +49,7 @@ class ApiController < ApplicationController
           puts response.parsed_response
 
           api_url = ENV['API_ENDPOINT_URL'] + '/users/get_terms'
-          query = { :cart_id => cart_id }
+          query = { :cart_id => cart_token, :url_token => checkout_token }
           response = HTTParty.post(api_url, :headers => headers, :query => query)
           puts response.code
           if response.body.nil? || response.body.empty?
@@ -98,7 +99,6 @@ class ApiController < ApplicationController
     payment_code = params[:payment_code]
     value = params[:value]
     terms = params[:terms]
-    # checkout_token = params[:checkout_token]
 
     api_url = ENV['API_ENDPOINT_URL'] + '/users/validate_transaction_payment_token'
     api_header_key = ENV['API_HEADER_KEY']
@@ -123,24 +123,32 @@ class ApiController < ApplicationController
         result = { :code => 0, :msg => message }
       else
         discount_amount = value
+
+        # ***Code for public app***
         # shopify_session = ShopifyAPI::Session.new(
         #   domain: shop.shopify_domain,
         #   token: shop.shopify_token,
         #   api_version: shop.api_version,
         # )
         # ShopifyAPI::Base.activate_session(shopify_session)
+
+        # ***Code for current private app***
         private_api_key = ENV['SHOPIFY_PRIVATE_API_KEY']
         private_api_password = ENV['SHOPIFY_PRIVATE_API_PASSWORD']
         shop_url = "https://#{private_api_key}:#{private_api_password}@#{shop_domain}"
         ShopifyAPI::Base.site = shop_url
         ShopifyAPI::Base.api_version = '2020-04'
+        
+        # ***Reusable code***
         # accesstokens = ShopifyAPI::StorefrontAccessToken.find(:all)
         # if accesstokens.empty?
         #   accesstoken = ShopifyAPI::StorefrontAccessToken.create(title: 'discount-apply')
         # else
         #   accesstoken = accesstokens[0]
         # end
-        # puts accesstoken.access_token
+        # checkouts = ShopifyAPI::Checkout.find(:all)
+        # checkout = checkouts.find { |record| record.token == checkout_token }
+        
         token = SecureRandom.hex(12)
         pricerule = ShopifyAPI::PriceRule.new
         pricerule.title = token
@@ -159,11 +167,8 @@ class ApiController < ApplicationController
         discountcode.code = token
         discountcode.usage_count = 1;
         discountcode.save
-        # checkouts = ShopifyAPI::Checkout.find(:all)
-        # checkout = checkouts.find { |record| record.token == checkout_token }
         result = {
           :code => 1,
-          # :access_token => accesstoken.access_token,
           :discount_code => token,
           :discount_amount => discount_amount,
           :msg => message
