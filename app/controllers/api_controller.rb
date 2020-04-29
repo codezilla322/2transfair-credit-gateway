@@ -95,7 +95,7 @@ class ApiController < ApplicationController
     end
 
     email = params[:email]
-    reference_code = params[:reference_code]
+    checkout_token = params[:checkout_token]
     payment_code = params[:payment_code]
     value = params[:value]
     terms = params[:terms]
@@ -106,7 +106,7 @@ class ApiController < ApplicationController
     header[api_header_key] = shop[:app_id_2transfair]
     query = {
       :email => email,
-      :reference_code => reference_code,
+      :reference_code => checkout_token,
       :payment_code => payment_code,
       :transaction_type => "checkout",
       :value => value,

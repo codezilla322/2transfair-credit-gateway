@@ -195,7 +195,7 @@ twotransfair.server_url = 'https://33b46cd2.ngrok.io/api';
         data: {
           email: email,
           payment_code: payment_code,
-          reference_code: twotransfair.cart_token,
+          checkout_token: twotransfair.checkout_token,
           value: value,
           terms: terms,
           shop_domain: twotransfair.shop_domain,
