@@ -243,7 +243,6 @@ class ApiController < ApplicationController
         r
       end
     end
-    ShopifyAPI::PriceRule.delete(645150539855)
     discount_code = params[:discount_code]
     discountcode = ShopifyAPI::DiscountCode.lookup(discount_code)
     ShopifyAPI::DiscountCode.delete(discountcode.id, :price_rule_id => discountcode.price_rule_id)
