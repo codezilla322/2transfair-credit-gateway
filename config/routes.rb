@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   post '/api/login', to: 'api#login'
   post '/api/verify', to: 'api#verify'
   post '/api/resend', to: 'api#resend'
+  post '/api/reset', to: 'api#reset'
 end

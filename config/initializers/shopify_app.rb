@@ -6,7 +6,7 @@ ShopifyApp.configure do |config|
   config.api_key = ENV['SHOPIFY_API_KEY']
   config.secret = ENV['SHOPIFY_API_SECRET']
   config.old_secret = ""
-  config.scope = "write_price_rules,write_discounts,write_checkouts"
+  config.scope = "write_price_rules,write_discounts"
   config.embedded_app = true
   config.after_authenticate_job = false
   config.api_version = "2020-04"

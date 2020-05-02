@@ -124,7 +124,16 @@ class ApiController < ApplicationController
       else
         discount_amount = value
 
+        # ***Code for current private app***
+        # comment below code for public app
+        private_api_key = ENV['SHOPIFY_PRIVATE_API_KEY']
+        private_api_password = ENV['SHOPIFY_PRIVATE_API_PASSWORD']
+        shop_url = "https://#{private_api_key}:#{private_api_password}@#{shop_domain}"
+        ShopifyAPI::Base.site = shop_url
+        ShopifyAPI::Base.api_version = '2020-04'
+
         # ***Code for public app***
+        # remove this comment for public app
         # shopify_session = ShopifyAPI::Session.new(
         #   domain: shop.shopify_domain,
         #   token: shop.shopify_token,
@@ -132,23 +141,6 @@ class ApiController < ApplicationController
         # )
         # ShopifyAPI::Base.activate_session(shopify_session)
 
-        # ***Code for current private app***
-        private_api_key = ENV['SHOPIFY_PRIVATE_API_KEY']
-        private_api_password = ENV['SHOPIFY_PRIVATE_API_PASSWORD']
-        shop_url = "https://#{private_api_key}:#{private_api_password}@#{shop_domain}"
-        ShopifyAPI::Base.site = shop_url
-        ShopifyAPI::Base.api_version = '2020-04'
-        
-        # ***Reusable code***
-        # accesstokens = ShopifyAPI::StorefrontAccessToken.find(:all)
-        # if accesstokens.empty?
-        #   accesstoken = ShopifyAPI::StorefrontAccessToken.create(title: 'discount-apply')
-        # else
-        #   accesstoken = accesstokens[0]
-        # end
-        # checkouts = ShopifyAPI::Checkout.find(:all)
-        # checkout = checkouts.find { |record| record.token == checkout_token }
-        
         token = SecureRandom.hex(12)
         pricerule = ShopifyAPI::PriceRule.new
         pricerule.title = token
@@ -197,12 +189,64 @@ class ApiController < ApplicationController
     headers[:Authorization] = auth_token
     query = { :transaction_type => 'payment' }
     response = HTTParty.post(api_url, :headers => headers, :query => query)
+    puts response.code
     if response.body.nil? || response.body.empty?
       result = { :code => 0, :msg => "Error de servidor interno." }
     else
       puts response.parsed_response
-      result = { :code => 1, :msg => response.parsed_response['message'] }
+      if response.code == 200
+        result = { :code => 1, :msg => response.parsed_response['message'] }
+      else
+        result = { :code => 0, :msg => response.parsed_response['message'] }
+      end
     end
     render :json => result
+  end
+  def reset
+    shop_domain = params[:shop_domain]
+    shop = Shop.find_by(shopify_domain: shop_domain)
+    if shop.nil?
+      result = {
+        :code => 0,
+        :msg => "El dominio de Shopify no existe."
+      }
+      render :json => result
+      return
+    end
+
+    # ***Code for current private app***
+    # comment below code for public app
+    private_api_key = ENV['SHOPIFY_PRIVATE_API_KEY']
+    private_api_password = ENV['SHOPIFY_PRIVATE_API_PASSWORD']
+    shop_url = "https://#{private_api_key}:#{private_api_password}@#{shop_domain}"
+    ShopifyAPI::Base.site = shop_url
+    ShopifyAPI::Base.api_version = '2020-04'
+
+    # ***Code for public app***
+    # remove this comment for public app
+    # shopify_session = ShopifyAPI::Session.new(
+    #   domain: shop.shopify_domain,
+    #   token: shop.shopify_token,
+    #   api_version: shop.api_version,
+    # )
+    # ShopifyAPI::Base.activate_session(shopify_session)
+
+    ShopifyAPI::DiscountCode.class_eval do
+      def self.lookup(code)
+        find(:one, from: '/admin/discount_codes/lookup.json?code=' + code)
+        rescue ActiveResource::Redirection => e
+          r = find(:one, from: e.response['Location'])
+          unless r.nil?
+            r.attributes[:price_rule_id] = %r{price_rules/([0-9]+)}.match(e.response['Location'])[1].to_i
+            r.prefix_options[:price_rule_id] = %r{price_rules/([0-9]+)}.match(e.response['Location'])[1].to_i
+          end
+        r
+      end
+    end
+    ShopifyAPI::PriceRule.delete(645150539855)
+    discount_code = params[:discount_code]
+    discountcode = ShopifyAPI::DiscountCode.lookup(discount_code)
+    ShopifyAPI::DiscountCode.delete(discountcode.id, :price_rule_id => discountcode.price_rule_id)
+    ShopifyAPI::PriceRule.delete(discountcode.price_rule_id)
   end
 end
