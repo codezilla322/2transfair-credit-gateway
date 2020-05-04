@@ -43,11 +43,8 @@ class ApiController < ApplicationController
         headers[:Authorization] = auth_token
         query = { :transaction_type => 'payment' }
         response = HTTParty.post(api_url, :headers => headers, :query => query)
-        if response.body.nil? || response.body.empty?
-          result = { :code => 0, :msg => "Error de servidor interno." }
-        else
+        if response.code == 201
           puts response.parsed_response
-
           api_url = ENV['API_ENDPOINT_URL'] + '/users/get_terms'
           query = { :cart_id => cart_token, :url_token => checkout_token }
           response = HTTParty.post(api_url, :headers => headers, :query => query)
@@ -72,6 +69,8 @@ class ApiController < ApplicationController
               }
             end
           end
+        else
+          result = { :code => 0, :msg => "Error de servidor interno." }
         end
       else
         result = {
@@ -113,15 +112,16 @@ class ApiController < ApplicationController
       :terms => terms
     }
     response = HTTParty.post(api_url, :headers => header, :query => query)
-    if response.body.nil? || response.body.empty?
-      result = { :code => 0, :msg => "Error de servidor interno." }
-    else
-      puts response.code
-      puts response.parsed_response
-      message = response.parsed_response['message']
-      if response.code != 200
-        result = { :code => 0, :msg => message }
-      else
+    # if response.body.nil? || response.body.empty?
+    #   result = { :code => 0, :msg => "Error de servidor interno." }
+    # else
+    #   puts response.code
+    #   puts response.parsed_response
+    #   message = response.parsed_response['message']
+    #   if response.code != 200
+    #     result = { :code => 0, :msg => message }
+    #   else
+message = 'aaa';
         discount_amount = value
 
         # ***Code for current private app***
@@ -165,8 +165,8 @@ class ApiController < ApplicationController
           :discount_amount => discount_amount,
           :msg => message
         }
-      end
-    end
+    #   end
+    # end
     render :json => result
   end
   def resend
@@ -194,7 +194,7 @@ class ApiController < ApplicationController
       result = { :code => 0, :msg => "Error de servidor interno." }
     else
       puts response.parsed_response
-      if response.code == 200
+      if response.code == 201
         result = { :code => 1, :msg => response.parsed_response['message'] }
       else
         result = { :code => 0, :msg => response.parsed_response['message'] }

@@ -1,5 +1,5 @@
 window.twotransfair = window.twotransfair || {};
-twotransfair.server_url = 'https://b5f8de51.ngrok.io/api';
+twotransfair.server_url = 'https://9244bb47.ngrok.io/api';
 (function($){
   $.fn.twotransfairModal = function(msg_modal = null) {
     var $this = this;
@@ -254,6 +254,7 @@ twotransfair.server_url = 'https://b5f8de51.ngrok.io/api';
         },
         success: function(result) {
           if(result.code == 1) {
+            $('#twotransfair_code_sent').html(result.msg);
             $('#twotransfair_code_sent').removeClass('modal-hidden');
           } else {
             $('#twotransfair_resend_code').removeClass('modal-hidden');
@@ -261,8 +262,8 @@ twotransfair.server_url = 'https://b5f8de51.ngrok.io/api';
           }
         },
         error: function() {
-          $('#twotransfair_resend_code').removeClass('modal-hidden');
           $('#twotransfair_failed_msg').html('Error de servidor interno');
+          $('#twotransfair_resend_code').removeClass('modal-hidden');
         }
       });
     });

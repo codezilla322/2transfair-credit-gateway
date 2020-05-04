@@ -148,6 +148,15 @@
   border-color: #545b62;
 }
 
+#twotransfair_terms_content {
+  max-height: 60vh;
+  overflow-y: scroll;
+  word-break: break-word;
+}
+#twotransfair_terms_content::-webkit-scrollbar {
+  display: none;
+}
+
 @media (max-width: 550px) {
   .modal-content {
     width: 300px;
