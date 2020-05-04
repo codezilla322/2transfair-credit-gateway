@@ -112,16 +112,15 @@ class ApiController < ApplicationController
       :terms => terms
     }
     response = HTTParty.post(api_url, :headers => header, :query => query)
-    # if response.body.nil? || response.body.empty?
-    #   result = { :code => 0, :msg => "Error de servidor interno." }
-    # else
-    #   puts response.code
-    #   puts response.parsed_response
-    #   message = response.parsed_response['message']
-    #   if response.code != 200
-    #     result = { :code => 0, :msg => message }
-    #   else
-message = 'aaa';
+    if response.body.nil? || response.body.empty?
+      result = { :code => 0, :msg => "Error de servidor interno." }
+    else
+      puts response.code
+      puts response.parsed_response
+      message = response.parsed_response['message']
+      if response.code != 200
+        result = { :code => 0, :msg => message }
+      else
         discount_amount = value
 
         # ***Code for current private app***
@@ -165,8 +164,8 @@ message = 'aaa';
           :discount_amount => discount_amount,
           :msg => message
         }
-    #   end
-    # end
+      end
+    end
     render :json => result
   end
   def resend
