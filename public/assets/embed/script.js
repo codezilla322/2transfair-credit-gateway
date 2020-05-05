@@ -1,5 +1,5 @@
 window.twotransfair = window.twotransfair || {};
-twotransfair.server_url = 'https://9244bb47.ngrok.io/api';
+twotransfair.server_url = 'https://shopifyst.2transfair.com/api';
 (function($){
   $.fn.twotransfairModal = function(msg_modal = null) {
     var $this = this;
@@ -116,6 +116,7 @@ twotransfair.server_url = 'https://9244bb47.ngrok.io/api';
         $('form.edit_checkout .step__footer button[type=submit] span').html('Terminar');
         $('form.edit_checkout').on('submit', function(e) {
           e.preventDefault();
+          $('form.edit_checkout').submit();
           $.ajax({
             method: 'post',
             crossDomain: true,
