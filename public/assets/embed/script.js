@@ -18,10 +18,10 @@ twotransfair.server_url = 'https://shopifyst.2transfair.com/api';
       }
     });
     this.showModal = function() {
-      $(this).css('display', 'flex');
+      $(this).removeClass('modal-hidden').css('display', 'flex');
     }
     this.hideModal = function() {
-      $(this).hide();
+      $(this).addClass('modal-hidden');
     };
     this.showMsg = function(msg) {
       $(this).find('.modal-msg').html(msg).show();
@@ -113,10 +113,10 @@ twotransfair.server_url = 'https://shopifyst.2transfair.com/api';
       if(!applied_discount_code || applied_discount_code != saved_discount_code) {
         $('#twotransfair_modals_wrapper').show();
       } else {
-        $('form.edit_checkout .step__footer button[type=submit] span').html('Terminar');
-        $('form.edit_checkout').on('submit', function(e) {
+        $('div.main form.edit_checkout .step__footer button[type=submit] span').html('Terminar');
+        $('div.main form.edit_checkout').on('submit', function(e) {
           e.preventDefault();
-          $('form.edit_checkout').submit();
+          $('div.tags-list form.edit_checkout button[type=submit]').click();
           $.ajax({
             method: 'post',
             crossDomain: true,
@@ -187,6 +187,10 @@ twotransfair.server_url = 'https://shopifyst.2transfair.com/api';
       }, step_3);
     });
     $('#twotransfair_step3_next').click(function() {
+      if(twotransfair.terms_accepted == 0) {
+        step_3.showMsgModal('Aún no has leído y aceptado las condiciones del crédito');
+        return;
+      }
       var payment_code = $('#twotransfair_payment_code').val();
       if(!isValidCode(payment_code) || payment_code.length != 6) {
         step_3.showMsg('Código inválido');
@@ -217,9 +221,8 @@ twotransfair.server_url = 'https://shopifyst.2transfair.com/api';
       applyDiscount(twotransfair.discount_code);
     });
     $('#twotransfair_terms').change(function() {
-      $('#twotransfair_step3_next').attr('disabled', true);
-      $('#twotransfair_terms_url').removeClass('modal-hidden');
-      $('#twotransfair_terms_accepted').addClass('modal-hidden');
+      twotransfair.terms_accepted = 0;
+      $('#twotransfair_terms_modal .modal-back').addClass('modal-hidden');
     });
     $('#twotransfair_terms_url').click(function() {
       var value = twotransfair.total_value;
@@ -232,15 +235,17 @@ twotransfair.server_url = 'https://shopifyst.2transfair.com/api';
           $('#twotransfair_terms_content').html(result);
           $('#twotransfair_terms_modal').removeClass('modal-hidden');
           step_3.hideModal();
-          $('#twotransfair_terms_url').addClass('modal-hidden');
-          $('#twotransfair_terms_accepted').removeClass('modal-hidden');
         }
       });
     });
+    $('#twotransfair_terms_content').scroll(function() {
+      if(this.scrollTop === (this.scrollHeight - this.offsetHeight))
+        $('#twotransfair_terms_modal .modal-back').removeClass('modal-hidden');
+    });
     $('#twotransfair_terms_modal .modal-back').click(function() {
+      twotransfair.terms_accepted = 1;
       $('#twotransfair_terms_modal').addClass('modal-hidden');
       step_3.showModal();
-      $('#twotransfair_step3_next').removeAttr('disabled');
     });
     $('#twotransfair_resend_code').click(function() {
       $('#twotransfair_resend_code').addClass('modal-hidden');
@@ -270,6 +275,7 @@ twotransfair.server_url = 'https://shopifyst.2transfair.com/api';
     });
     twotransfair.shop_domain = window.Shopify.Checkout.apiHost;
     twotransfair.checkout_token = window.Shopify.Checkout.token;
+    twotransfair.terms_accepted = 0;
     checkDiscount();
   });
 })(jQuery);
